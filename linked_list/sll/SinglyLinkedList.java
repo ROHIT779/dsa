@@ -34,6 +34,22 @@ public class SinglyLinkedList {
         }
     }
 
+    public void removeNode(){
+        if(head != null) {
+            SinglyLinkedListNode previousNode = head;
+            SinglyLinkedListNode nextNode = head.getNextNode();
+            if(nextNode == null){
+                head = null;
+            }else{
+                while(nextNode.getNextNode() != null){
+                    previousNode = previousNode.getNextNode();
+                    nextNode = nextNode.getNextNode();
+                }
+                previousNode.setNextNode(null);
+            }
+        }
+    }
+
     public String traverse(){
         String output = "";
         SinglyLinkedListNode currentNode = head;
