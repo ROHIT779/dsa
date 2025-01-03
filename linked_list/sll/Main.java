@@ -21,5 +21,14 @@ public class Main {
         System.out.println(sll.traverse());
         sll.removeNode();
         System.out.println(sll.traverse());
+        sll.addNodeInBeginning("X");
+        sll.addNodeInBeginning("Y");
+        sll.addNodeInMiddle("Z", 2);
+        System.out.println(sll.traverse());
+        sll.removeNodeFromBeginning();
+        System.out.println(sll.traverse());
+        sll.addNodeInMiddle("YY",2);
+        System.out.println(sll.traverse());
+        System.out.println(sll.mergeData());
     }
 }

@@ -1,5 +1,8 @@
 package sll;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SinglyLinkedList {
     private SinglyLinkedListNode head;
 
@@ -48,6 +51,94 @@ public class SinglyLinkedList {
                 previousNode.setNextNode(null);
             }
         }
+    }
+
+    public void addNodeInBeginning(String data){
+        SinglyLinkedListNode newNode = new SinglyLinkedListNode(data);
+        if(head == null){
+            head = newNode;
+        }else{
+            newNode.setNextNode(head);
+            head = newNode;
+        }
+    }
+
+    public void removeNodeFromBeginning(){
+        if(head != null){
+            head = head.getNextNode();
+        }
+    }
+
+    public void addNodeInMiddle(String data, int position){
+        SinglyLinkedListNode newNode = new SinglyLinkedListNode(data);
+        if(head != null){
+            int currentPosition = 1;
+            SinglyLinkedListNode currentNode = head;
+            while((currentNode.getNextNode() != null) && ((currentPosition +1) < position)){
+                currentNode = currentNode.getNextNode();
+                currentPosition++;
+            }
+            if((currentPosition+1) == position){
+                SinglyLinkedListNode tempNode = currentNode.getNextNode();
+                currentNode.setNextNode(newNode);
+                newNode.setNextNode(tempNode);
+            }
+        }else{
+            if(position == 1){
+                head = newNode;
+            }
+        }
+    }
+
+    public void removeNodeFromMiddle(int position){
+        if(head != null){
+            int currentPosition = 1;
+            SinglyLinkedListNode currentNode = head;
+            while(((currentNode.getNextNode() != null)) && ((currentPosition+1) < position)){
+                currentNode = currentNode.getNextNode();
+            }
+            if((currentPosition+1) == position){
+                if(currentNode.getNextNode() != null){
+                    SinglyLinkedListNode newNextNode = currentNode.getNextNode().getNextNode();
+                    currentNode.setNextNode(newNextNode);
+                }
+            }
+        }
+    }
+
+    public int searchData(String data){
+        if(head != null){
+            int position = 1;
+            SinglyLinkedListNode currentNode = head;
+            while((currentNode.getNextNode() != null)){
+                if(currentNode.getData().equals(data)){
+                    return position;
+                }else{
+                    currentNode = currentNode.getNextNode();
+                    position++;
+                }
+            }
+            if(currentNode.getNextNode() == null){
+                if(currentNode.getData().equals(data)){
+                    return position;
+                }else{
+                    return 0;
+                }
+            }
+        }
+        return 0; // data not found
+    }
+
+    public String mergeData(){
+        String result = "";
+        if(head != null){
+            SinglyLinkedListNode currentNode = head;
+            while(currentNode != null){
+                result += currentNode.getData();
+                currentNode = currentNode.getNextNode();
+            }
+        }
+        return result;
     }
 
     public String traverse(){
