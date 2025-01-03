@@ -30,5 +30,7 @@ public class Main {
         sll.addNodeInMiddle("YY",2);
         System.out.println(sll.traverse());
         System.out.println(sll.mergeData());
+        String keyword = "X";
+        System.out.println("Position of " + keyword + " = " + sll.searchData(keyword));
     }
 }
