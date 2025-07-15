@@ -1,20 +1,20 @@
 package adjacencylist;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Stack;
 
-public class Graph {
-    List<GraphNode> nodes;
+public class WeightedGraph {
+    List<WeightedGraphNode> nodes;
 
-    public Graph(List<GraphNode> nodes) {
+    public WeightedGraph(List<WeightedGraphNode> nodes) {
         this.nodes = nodes;
     }
 
     public void addUndirectedEdge(int i, int j) {
-        GraphNode node1 = nodes.get(i);
-        GraphNode node2 = nodes.get(j);
+        WeightedGraphNode node1 = nodes.get(i);
+        WeightedGraphNode node2 = nodes.get(j);
         node1.addNeighbor(node2);
         node2.addNeighbor(node1);
     }
@@ -24,7 +24,7 @@ public class Graph {
     }
 
     public void printGraph() {
-        for(GraphNode node : nodes) {
+        for(WeightedGraphNode node : nodes) {
             System.out.print(node.name + " : ");
             for(int i = 0; i < node.neighbors.size(); i++) {
                 System.out.print(node.neighbors.get(i).name);
@@ -37,21 +37,21 @@ public class Graph {
     }
 
     public void resetIsVisitedForAllNodes() {
-        for(GraphNode node : nodes) {
+        for(WeightedGraphNode node : nodes) {
             node.isVisited = false;
         }
     }
 
-    public void BFS(GraphNode node) {
+    public void BFS(WeightedGraphNode node) {
         System.out.println("Printing BFS from " + node.name);
         //Queue
-        List<GraphNode> queue = new ArrayList<>();
+        List<WeightedGraphNode> queue = new ArrayList<>();
         queue.add(node);
         while(!queue.isEmpty()) {
-            GraphNode currentNode = queue.remove(0);
+            WeightedGraphNode currentNode = queue.remove(0);
             currentNode.isVisited = true;
             System.out.print(currentNode.name + " ");
-            for(GraphNode neighbor : currentNode.neighbors) {
+            for(WeightedGraphNode neighbor : currentNode.neighbors) {
                 if(!neighbor.isVisited && !queue.contains(neighbor)) {
                     queue.add(neighbor);
                 }
@@ -60,16 +60,16 @@ public class Graph {
         System.out.println();
     }
 
-    public void DFS(GraphNode node) {
+    public void DFS(WeightedGraphNode node) {
         System.out.println("Printing DFS from " + node.name);
         //Stack
-        List<GraphNode> stack = new ArrayList<>();
+        List<WeightedGraphNode> stack = new ArrayList<>();
         stack.add(node);
         while(!stack.isEmpty()) {
-            GraphNode currentNode = stack.remove(stack.size() - 1);
+            WeightedGraphNode currentNode = stack.remove(stack.size() - 1);
             currentNode.isVisited = true;
             System.out.print(currentNode.name + " ");
-            for(GraphNode neighbor : currentNode.neighbors) {
+            for(WeightedGraphNode neighbor : currentNode.neighbors) {
                 if(!neighbor.isVisited && !stack.contains(neighbor)) {
                     stack.add(neighbor);
                 }
@@ -79,8 +79,8 @@ public class Graph {
     }
 
     public void topologicalSort() {
-        Stack<GraphNode> stack = new Stack<>();
-        for(GraphNode node : nodes) {
+        Stack<WeightedGraphNode> stack = new Stack<>();
+        for(WeightedGraphNode node : nodes) {
             if(!node.isVisited) {
                 topologicalVisit(node, stack);
             }
@@ -91,8 +91,8 @@ public class Graph {
         System.out.println();
     }
 
-    public void topologicalVisit(GraphNode node, Stack<GraphNode> stack) {
-        for(GraphNode neighbor : node.neighbors) {
+    public void topologicalVisit(WeightedGraphNode node, Stack<WeightedGraphNode> stack) {
+        for(WeightedGraphNode neighbor : node.neighbors) {
             if(!neighbor.isVisited) {
                 topologicalVisit(neighbor, stack);
             }
@@ -103,13 +103,13 @@ public class Graph {
     }
 
     //BFS to find Single Source Shortest Path
-    public void BFSForSSSPP(GraphNode source) {
-        List<GraphNode> queue = new ArrayList<>();
+    public void BFSForSSSPP(WeightedGraphNode source) {
+        List<WeightedGraphNode> queue = new ArrayList<>();
         queue.add(source);
         while(!queue.isEmpty()) {
-            GraphNode node = queue.remove(0);
+            WeightedGraphNode node = queue.remove(0);
             node.isVisited = true;
-            for(GraphNode neighbor : node.neighbors) {
+            for(WeightedGraphNode neighbor : node.neighbors) {
                 if(!neighbor.isVisited && !queue.contains(neighbor)) {
                     neighbor.setParent(node);
                     queue.add(neighbor);
@@ -118,10 +118,37 @@ public class Graph {
         }
     }
 
-    public void pathPrint(GraphNode node) {
+    public void pathPrint(WeightedGraphNode node) {
         if(node.parent != null) {
             pathPrint(node.parent);
         }
         System.out.print(node.name + " ");
+    }
+    public void dijkstra() {
+        PriorityQueue<WeightedGraphNode> queue = new PriorityQueue<>();
+        queue.addAll(nodes);
+        while(!queue.isEmpty()) {
+            WeightedGraphNode currentNode = queue.remove();
+            for(WeightedGraphNode neighbor : currentNode.neighbors) {
+                if(neighbor.distance > (currentNode.distance + currentNode.weightMap.get(neighbor))) {
+                    neighbor.distance = currentNode.distance + currentNode.weightMap.get(neighbor);
+                    neighbor.parent = currentNode;
+                    queue.remove(neighbor);
+                    queue.add(neighbor);
+                }
+            }
+        }
+        for(WeightedGraphNode nodeToCheck : nodes) {
+            System.out.println("Node: " + nodeToCheck.name + " Distance: " + nodeToCheck.distance + " Path: ");
+            pathPrint(nodeToCheck);
+            System.out.println();
+        }
+    }
+
+    public void addWeightedDirectedEdge(int i, int j, int weight) {
+        WeightedGraphNode first = nodes.get(i);
+        WeightedGraphNode second = nodes.get(j);
+        first.neighbors.add(second);
+        first.weightMap.put(second, weight);
     }
 }
